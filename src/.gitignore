@@ -1,0 +1,72 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*$py.class # For Jython
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environment
+.venv/
+venv/
+env/
+# These are common virtual environment names. If you use a different name, add it.
+
+# Editor-specific files
+.vscode/        # VS Code
+.idea/
+*.sublime-project # Sublime Text
+*.sublime-workspace
+.DS_Store       # macOS-specific
+Thumbs.db       # Windows-specific
+**/*.iml
+
+# Logs and databases
+*.log
+*.sqlite3       # For SQLite databases, if applicable
+*.db
+
+# Temporary files
+*.tmp
+*.bak
+*.swp           # Vim swap files
+
+# Environment variables and secrets
+.env            # Common for environment variables
+.envrc          # direnv
+.flaskenv       # Flask specific environment file
+
+# Test and coverage reports
+.pytest_cache/
+htmlcov/
+.coverage
+.tox/           # tox directory
+.mypy_cache/    # MyPy type checker cache
+.ruff_cache/    # Ruff linter cache
+
+# Notebooks
+.ipynb_checkpoints/ # Jupyter Notebook checkpoints
+
+# PyInstaller / Nuitka
+# If you are packaging your application into an executable
+# These will often be within the 'dist/' or 'build/' directories already ignored
+# but can be explicitly added if needed.
+# *.spec
