@@ -7,3 +7,13 @@ def distance(left: list[int], right: list[int]) -> int | None:
     tuples = zip(sorted(left), sorted(right))
     diffs = map(subtract_tuple_elements, tuples)
     return sum(diffs)
+
+
+def similarity(left: list[int], right: list[int]) -> int | None:
+    from collections import Counter
+    left_counter = Counter(left)
+    right_counter = Counter(right)
+    acc = 0
+    for element in left_counter.keys():
+        acc += element * left_counter[element] * right_counter[element]
+    return acc
