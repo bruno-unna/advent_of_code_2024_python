@@ -1,7 +1,10 @@
-def perform_day_1() -> int:
+from src.historian_hysteria import distance, similarity
+
+
+def perform_day_1() -> dict[str, int]:
     def read_ints_from_file(file_name) -> list[int]:
         """
-        Reads integers from tests/resources/day1_left.txt, one per line.
+        Reads integers from a given file, one per line.
         """
         # 1. Get the absolute path of the current file (src/main.py)
         from pathlib import Path
@@ -33,9 +36,7 @@ def perform_day_1() -> int:
     left_numbers = read_ints_from_file("day1_left.txt")
     right_numbers = read_ints_from_file("day1_right.txt")
 
-    from historian_hysteria import distance
-
-    return distance(left_numbers, right_numbers)
+    return {"distance": distance(left_numbers, right_numbers), "similarity": similarity(left_numbers, right_numbers)}
 
 
 if __name__ == '__main__':
