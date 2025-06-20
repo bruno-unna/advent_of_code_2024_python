@@ -1,5 +1,5 @@
 from src.historian_hysteria import distance, similarity
-from src.multiplications import memory_multiply
+from src.multiplications import memory_multiply, selective_memory_multiply
 from src.red_nosed_reports import count_safe_reports
 
 
@@ -106,7 +106,7 @@ def perform_day_3() -> dict[str, int]:
 
     memory = read_memory_from_file("day3_memory.txt")
 
-    return {"multiplication": memory_multiply(memory)}
+    return {"multiplication": memory_multiply(memory), "selective_multiplication": selective_memory_multiply(memory)}
 
 
 if __name__ == '__main__':
