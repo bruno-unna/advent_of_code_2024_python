@@ -61,7 +61,7 @@ def perform_day_2() -> dict[str, int]:
             with open(resource_file_path, 'r') as file:
                 for line in file:
                     try:
-                        report = map(int, line.split())
+                        report = list(map(int, line.strip().split()))
                         records.append(report)
                     except ValueError:
                         print(f"Warning: Skipping unparseable line: '{line.strip()}' in {resource_file_path}")
