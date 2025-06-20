@@ -74,7 +74,7 @@ def perform_day_2() -> dict[str, int]:
 
     records = read_records_from_file("day2_reports.txt")
 
-    return {"safe_count": count_safe_reports(records)}
+    return count_safe_reports(records)
 
 
 if __name__ == '__main__':
