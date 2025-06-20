@@ -14,5 +14,5 @@ class Test(TestCase):
             [1, 3, 6, 7, 9]
         ]
         safe_count = count_safe_reports(reports)
-        self.assertEqual(safe_count["undampened"], 2, "There should be exactly 2 safe reports")
-        self.assertEqual(safe_count["dampened"], 4, "There should be exactly 4 dampened safe reports")
+        self.assertEqual(2, safe_count["undampened"], "There should be exactly 2 safe reports")
+        self.assertEqual(4, safe_count["dampened"], "There should be exactly 4 dampened safe reports")
