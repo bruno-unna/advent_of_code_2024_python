@@ -1,4 +1,5 @@
 from src.historian_hysteria import distance, similarity
+from src.multiplications import memory_multiply
 from src.red_nosed_reports import count_safe_reports
 
 
@@ -77,6 +78,38 @@ def perform_day_2() -> dict[str, int]:
     return count_safe_reports(records)
 
 
+def perform_day_3() -> dict[str, int]:
+    def read_memory_from_file(file_name) -> str:
+        """
+        Reads a dump of memory from a given file, as a string.
+        """
+        # 1. Get the absolute path of the current file (src/main.py)
+        from pathlib import Path
+        current_file_path = Path(__file__).resolve()
+
+        # 2. Navigate up to the project root.
+        # From src/main.py, one .parent goes to src/, another to project_root/
+        project_root = current_file_path.parent.parent
+
+        # 3. Construct the path to the resource file
+        resource_file_path = project_root / "tests" / "resources" / file_name
+
+        try:
+            with open(resource_file_path, 'r', encoding='utf-8') as file:
+                memory = file.read()
+        except FileNotFoundError:
+            print(f"Error: The file '{resource_file_path}' was not found.")
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+
+        return memory
+
+    memory = read_memory_from_file("day3_memory.txt")
+
+    return {"multiplication": memory_multiply(memory)}
+
+
 if __name__ == '__main__':
     print(f'The result for day 1 is {perform_day_1()}')
     print(f'The result for day 2 is {perform_day_2()}')
+    print(f'The result for day 3 is {perform_day_3()}')
