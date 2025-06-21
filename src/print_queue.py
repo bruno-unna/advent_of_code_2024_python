@@ -1,5 +1,17 @@
+from operator import contains
+
+
+def explode_update(update: list[int]) -> list[tuple[int, int]]:
+    tuples: list[tuple[int, int]] = []
+    for left in range(0, len(update) - 1):
+        for right in range(left + 1, len(update)):
+            tuples.append((update[left], update[right]))
+    return tuples
+
+
 def is_valid(update: list[int], rules: list[tuple[int, int]]) -> bool:
-    return False
+    update_tuples: list[tuple[int, int]] = explode_update(update)
+    return all(map(lambda t: contains(rules, t), update_tuples))
 
 
 def extract_valid_updates(rules: list[tuple[int, int]], updates: list[list[int]]) -> list[list[int]]:
