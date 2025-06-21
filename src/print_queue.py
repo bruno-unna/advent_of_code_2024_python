@@ -1,3 +1,4 @@
+from itertools import permutations
 from operator import contains
 
 
@@ -27,8 +28,21 @@ def triage_updates(rules: list[tuple[int, int]], updates: list[list[int]]) -> tu
     return valid_updates, invalid_updates
 
 
-def fix(bad_updates: list[list[int]]) -> list[list[int]]:
-    return bad_updates
+def fix(rules: list[tuple[int, int]], bad_updates: list[list[int]]) -> list[list[int]]:
+    def fix_update(bad_update: list[int]) -> list[int]:
+        candidate_rules: list[tuple[int, int]] = list(
+            filter(lambda r: r[0] in bad_update and r[1] in bad_update, rules))
+
+        for permutation in permutations(bad_update):
+            candidate_update = list(permutation)
+            if is_valid(candidate_update, candidate_rules):
+                return candidate_update
+        return []
+
+    fixed_updates = []
+    for bu in bad_updates:
+        fixed_updates.append(fix_update(bu))
+    return fixed_updates
 
 
 def sum_middle_pages(rules: list[tuple[int, int]], updates: list[list[int]]) -> tuple[int, int]:
@@ -38,5 +52,7 @@ def sum_middle_pages(rules: list[tuple[int, int]], updates: list[list[int]]) -> 
             acc += u[len(u) >> 1]
         return acc
 
-    n_valid, n_fixed = map(accumulate, triage_updates(rules, fix(updates)))
+    valid, invalid = triage_updates(rules, updates)
+    fixed = fix(rules, invalid)
+    n_valid, n_fixed = map(accumulate, (valid, fixed))
     return n_valid, n_fixed
