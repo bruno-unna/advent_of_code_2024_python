@@ -14,11 +14,11 @@ def ceres_search(needle: str, field: list[str]) -> int:
     def is_match(part_needle: str, position: tuple[int, int], direction: tuple[int, int]) -> bool:
         if len(part_needle) == 0:
             return True
-        x, y = position
+        lx, ly = position
         dx, dy = direction
-        if x < 0 or x >= field_size[0] or y < 0 or y >= field_size[1]:
+        if lx < 0 or lx >= field_size[0] or ly < 0 or ly >= field_size[1]:
             return False
-        return part_needle[0] == field[y][x] and is_match(part_needle[1:], (x + dx, y + dy), direction)
+        return part_needle[0] == field[ly][lx] and is_match(part_needle[1:], (lx + dx, ly + dy), direction)
 
     count = 0
     for x in range(0, field_size[0]):
