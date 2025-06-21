@@ -1,4 +1,4 @@
-from src.ceres_search import ceres_search
+from src.ceres_search import ceres_search, ceres_x_search
 from src.historian_hysteria import distance, similarity
 from src.multiplications import memory_multiply, selective_memory_multiply
 from src.red_nosed_reports import count_safe_reports
@@ -139,7 +139,7 @@ def perform_day_4() -> dict[str, int]:
 
     field = read_strs_from_file("day4_word_search.txt")
 
-    return {"XMAS count": ceres_search('XMAS', field)}
+    return {"XMAS count": ceres_search('XMAS', field), "X-MAS count": ceres_x_search('MAS', field)}
 
 
 if __name__ == '__main__':
