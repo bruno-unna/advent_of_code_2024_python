@@ -1,3 +1,4 @@
+from src.ceres_search import ceres_search
 from src.historian_hysteria import distance, similarity
 from src.multiplications import memory_multiply, selective_memory_multiply
 from src.red_nosed_reports import count_safe_reports
@@ -106,7 +107,43 @@ def perform_day_3() -> dict[str, int]:
     return {"multiplication": memory_multiply(memory), "selective_multiplication": selective_memory_multiply(memory)}
 
 
+def perform_day_4() -> dict[str, int]:
+    def read_strs_from_file(file_name) -> list[str]:
+        """
+        Reads strings from a given file, one per line.
+        """
+        # 1. Get the absolute path of the current file (src/main.py)
+        from pathlib import Path
+        current_file_path = Path(__file__).resolve()
+
+        # 2. Navigate up to the project root.
+        # From src/main.py, one .parent goes to src/, another to project_root/
+        project_root = current_file_path.parent.parent
+
+        # 3. Construct the path to the resource file
+        resource_file_path = project_root / "tests" / "resources" / file_name
+
+        strs = []
+        try:
+            with open(resource_file_path, 'r') as file:
+                for line in file:
+                    s = line.strip()
+                    if len(s) > 0:
+                        strs.append(s)
+        except FileNotFoundError:
+            print(f"Error: The file '{resource_file_path}' was not found.")
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+
+        return strs
+
+    field = read_strs_from_file("day4_word_search.txt")
+
+    return {"XMAS count": ceres_search('XMAS', field)}
+
+
 if __name__ == '__main__':
     print(f'The result for day 1 is {perform_day_1()}')
     print(f'The result for day 2 is {perform_day_2()}')
     print(f'The result for day 3 is {perform_day_3()}')
+    print(f'The result for day 4 is {perform_day_4()}')
