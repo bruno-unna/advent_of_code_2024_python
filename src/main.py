@@ -1,6 +1,7 @@
 from src.ceres_search import ceres_search, ceres_x_search
 from src.historian_hysteria import distance, similarity
 from src.multiplications import memory_multiply, selective_memory_multiply
+from src.print_queue import sum_middle_pages
 from src.red_nosed_reports import count_safe_reports
 
 
@@ -142,8 +143,77 @@ def perform_day_4() -> dict[str, int]:
     return {"XMAS count": ceres_search('XMAS', field), "X-MAS count": ceres_x_search('MAS', field)}
 
 
+def perform_day_5() -> dict[str, int]:
+    def read_rules_from_file(file_name) -> list[tuple[int, int]]:
+        """
+        Reads rules (tuples) of two ints from a given file, one per line, separated by |.
+        """
+        # 1. Get the absolute path of the current file (src/main.py)
+        from pathlib import Path
+        current_file_path = Path(__file__).resolve()
+
+        # 2. Navigate up to the project root.
+        # From src/main.py, one .parent goes to src/, another to project_root/
+        project_root = current_file_path.parent.parent
+
+        # 3. Construct the path to the resource file
+        resource_file_path = project_root / "tests" / "resources" / file_name
+
+        tuples = []
+        try:
+            with open(resource_file_path, 'r') as file:
+                for line in file:
+                    s = line.strip().split('|')
+                    t = (int(s[0]), int(s[1]))
+                    tuples.append(t)
+        except FileNotFoundError:
+            print(f"Error: The file '{resource_file_path}' was not found.")
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+
+        return tuples
+
+    def read_updates_from_file(file_name) -> list[list[int]]:
+        """
+        Reads updates (lists of ints) from a given file, one per line.
+        """
+        # 1. Get the absolute path of the current file (src/main.py)
+        from pathlib import Path
+        current_file_path = Path(__file__).resolve()
+
+        # 2. Navigate up to the project root.
+        # From src/main.py, one .parent goes to src/, another to project_root/
+        project_root = current_file_path.parent.parent
+
+        # 3. Construct the path to the resource file
+        resource_file_path = project_root / "tests" / "resources" / file_name
+
+        updates = []
+        try:
+            with open(resource_file_path, 'r') as file:
+                for line in file:
+                    try:
+                        updates.append(list(map(int, line.strip().split(','))))
+                    except ValueError:
+                        print(f"Warning: Skipping unparseable line: '{line.strip()}' in {resource_file_path}")
+        except FileNotFoundError:
+            print(f"Error: The file '{resource_file_path}' was not found.")
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+
+        return updates
+
+    rules = read_rules_from_file("day5_rules.txt")
+    updates = read_updates_from_file("day5_updates.txt")
+
+    sum_of_middles = sum_middle_pages(rules, updates)
+
+    return {"sum of middle pages": sum_of_middles}
+
+
 if __name__ == '__main__':
     print(f'The result for day 1 is {perform_day_1()}')
     print(f'The result for day 2 is {perform_day_2()}')
     print(f'The result for day 3 is {perform_day_3()}')
     print(f'The result for day 4 is {perform_day_4()}')
+    print(f'The result for day 5 is {perform_day_5()}')
