@@ -10,6 +10,8 @@ def explode_update(update: list[int]) -> list[tuple[int, int]]:
 
 
 def is_valid(update: list[int], rules: list[tuple[int, int]]) -> bool:
+    if len(update) % 2 == 0:  # this doesn't work for updates with even number of elements
+        return False
     update_tuples: list[tuple[int, int]] = explode_update(update)
     return all(map(lambda t: contains(rules, t), update_tuples))
 
