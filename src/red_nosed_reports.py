@@ -22,5 +22,5 @@ def count_safe_reports(reports: list[list[int]]) -> dict[str, int]:
                 break
         return fixable
 
-    return {"undampened": sum(1 for record in reports if is_safe(record)),
-            "dampened": sum(1 for record in reports if is_safe_dampened(record))}
+    return {"undampened": sum(1 for report in reports if is_safe(report)),
+            "dampened": sum(1 for report in reports if is_safe_dampened(report))}

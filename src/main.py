@@ -42,9 +42,9 @@ def perform_day_1() -> dict[str, int]:
 
 
 def perform_day_2() -> dict[str, int]:
-    def read_records_from_file(file_name) -> list[list[int]]:
+    def read_reports_from_file(file_name) -> list[list[int]]:
         """
-        Reads records (lists of ints) from a given file, one per line.
+        Reads reports (lists of ints) from a given file, one per line.
         """
         # 1. Get the absolute path of the current file (src/main.py)
         from pathlib import Path
@@ -57,13 +57,12 @@ def perform_day_2() -> dict[str, int]:
         # 3. Construct the path to the resource file
         resource_file_path = project_root / "tests" / "resources" / file_name
 
-        records = []
+        reports = []
         try:
             with open(resource_file_path, 'r') as file:
                 for line in file:
                     try:
-                        report = list(map(int, line.strip().split()))
-                        records.append(report)
+                        reports.append(list(map(int, line.strip().split())))
                     except ValueError:
                         print(f"Warning: Skipping unparseable line: '{line.strip()}' in {resource_file_path}")
         except FileNotFoundError:
@@ -71,11 +70,9 @@ def perform_day_2() -> dict[str, int]:
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
 
-        return records
+        return reports
 
-    records = read_records_from_file("day2_reports.txt")
-
-    return count_safe_reports(records)
+    return count_safe_reports(read_reports_from_file("day2_reports.txt"))
 
 
 def perform_day_3() -> dict[str, int]:
