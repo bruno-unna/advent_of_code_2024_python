@@ -1,6 +1,5 @@
 from unittest import TestCase
 
-from src.ceres_search import ceres_search, ceres_x_search
 from src.print_queue import sum_middle_pages
 
 
@@ -38,5 +37,6 @@ class Test(TestCase):
             [97, 13, 75, 29, 47],
         ]
 
-        result = sum_middle_pages(rules, updates)
-        self.assertEqual(143, result, "The sum of middle pages (valid updates only) should be 143")
+        good, fixed = sum_middle_pages(rules, updates)
+        self.assertEqual(143, good, "The sum of middle pages (valid updates only) should be 143")
+        self.assertEqual(123, fixed, "The sum of middle pages (fixed updates only) should be 123")

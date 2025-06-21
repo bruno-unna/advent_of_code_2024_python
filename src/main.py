@@ -206,9 +206,9 @@ def perform_day_5() -> dict[str, int]:
     rules = read_rules_from_file("day5_rules.txt")
     updates = read_updates_from_file("day5_updates.txt")
 
-    sum_of_middles = sum_middle_pages(rules, updates)
+    sum_of_middles, sum_of_middles_after_fix = sum_middle_pages(rules, updates)
 
-    return {"sum of middle pages": sum_of_middles}
+    return {"sum of middle pages": sum_of_middles, "sum of middle pages (fixed updates)": sum_of_middles_after_fix}
 
 
 if __name__ == '__main__':
