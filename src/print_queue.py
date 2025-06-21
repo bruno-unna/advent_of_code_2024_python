@@ -7,4 +7,8 @@ def extract_valid_updates(rules: list[tuple[int, int]], updates: list[list[int]]
 
 
 def sum_middle_pages(rules: list[tuple[int, int]], updates: list[list[int]]) -> int:
-    return 0
+    valid_updates = extract_valid_updates(rules, updates)
+    acc = 0
+    for update in valid_updates:
+        acc += update[len(update) >> 1]
+    return acc
