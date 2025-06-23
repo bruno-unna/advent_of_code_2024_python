@@ -1,4 +1,5 @@
 import pprint
+from pathlib import Path
 
 from src.ceres_search import ceres_search, ceres_x_search
 from src.historian_hysteria import distance, similarity
@@ -12,7 +13,6 @@ def read_lines_from_file(file_name, f):
     Reads lines from a given file, and applies the given transformation for each of them.
     """
     # 1. Get the absolute path of the current file (src/main.py)
-    from pathlib import Path
     current_file_path = Path(__file__).resolve()
 
     # 2. Navigate up to the project root.
@@ -43,7 +43,6 @@ def read_block_from_file(file_name) -> str:
     Reads a binary block from a given file, as a string.
     """
     # 1. Get the absolute path of the current file (src/main.py)
-    from pathlib import Path
     current_file_path = Path(__file__).resolve()
 
     # 2. Navigate up to the project root.

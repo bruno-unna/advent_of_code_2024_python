@@ -1,3 +1,6 @@
+from collections import Counter
+
+
 def distance(left: list[int], right: list[int]) -> int | None:
     def subtract_tuple_elements(tup) -> int:
         return abs(tup[0] - tup[1])
@@ -10,7 +13,6 @@ def distance(left: list[int], right: list[int]) -> int | None:
 
 
 def similarity(left: list[int], right: list[int]) -> int | None:
-    from collections import Counter
     left_counter = Counter(left)
     right_counter = Counter(right)
     acc = 0
