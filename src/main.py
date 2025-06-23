@@ -8,39 +8,14 @@ from src.print_queue import report_totals, Rule, Update
 from src.red_nosed_reports import count_safe_reports
 
 
-def read_lines_from_file(file_name, f):
+def read_from_file(file_name, loop_f, transform_f):
     """
-    Reads lines from a given file, and applies the given transformation for each of them.
-    """
-    # 1. Get the absolute path of the current file (src/main.py)
-    current_file_path = Path(__file__).resolve()
+    Reads from a file, generically.
 
-    # 2. Navigate up to the project root.
-    # From src/main.py, one .parent goes to src/, another to project_root/
-    project_root = current_file_path.parent.parent
-
-    # 3. Construct the path to the resource file
-    resource_file_path = project_root / "tests" / "resources" / file_name
-
-    rs = []
-    try:
-        with open(resource_file_path, 'r') as file:
-            for line in file:
-                try:
-                    rs.append(f(line))
-                except ValueError:
-                    print(f"Warning: Skipping unparseable line: '{line.strip()}' in {resource_file_path}")
-    except FileNotFoundError:
-        print(f"Error: The file '{resource_file_path}' was not found.")
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
-
-    return rs
-
-
-def read_block_from_file(file_name) -> str:
-    """
-    Reads a binary block from a given file, as a string.
+    :param file_name: Name of the file to read from.
+    :param loop_f: Function that determines how the file is read (e.g. line by line, or as a block).
+    :param transform_f: Transformation applied in each application of the loop function.
+    :return: Contents of the file, after having been complete read and transformed.
     """
     # 1. Get the absolute path of the current file (src/main.py)
     current_file_path = Path(__file__).resolve()
@@ -54,13 +29,48 @@ def read_block_from_file(file_name) -> str:
 
     try:
         with open(resource_file_path, 'r', encoding='utf-8') as file:
-            block = file.read()
+            rs = loop_f(file, transform_f)
     except FileNotFoundError:
         print(f"Error: The file '{resource_file_path}' was not found.")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
 
-    return block
+    return rs
+
+
+def read_lines_from_file(file_name, processing_function):
+    """
+    Reads a file, line-by-line (see the internal looping_function), applying a transformation to each line.
+
+    :param file_name: Name of the file to read the lines from.
+    :param processing_function: Transformation applied to every line as it's read.
+    :return: List with all the lines of the file, after having been transformed.
+    """
+
+    def looping_function(file, f):
+        results = []
+        for line in file:
+            try:
+                results.append(f(line))
+            except ValueError:
+                print(f"Warning: Skipping unparseable line: '{line.strip()}'")
+        return results
+
+    return read_from_file(file_name, looping_function, processing_function)
+
+
+def read_block_from_file(file_name) -> str:
+    """
+    Reads a file, as a block, into a string.
+
+    :param file_name: Name of the file to read from.
+    :return: A string with the contents of the file.
+    """
+
+    def looping_function(file, f):
+        return file.read()
+
+    return read_from_file(file_name, looping_function, lambda x: x)
 
 
 def historian_hysteria_challenge() -> dict[str, int]:
