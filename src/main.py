@@ -1,7 +1,7 @@
 from src.ceres_search import ceres_search, ceres_x_search
 from src.historian_hysteria import distance, similarity
 from src.multiplications import memory_multiply, selective_memory_multiply
-from src.print_queue import sum_middle_pages
+from src.print_queue import report_totals, Rule, Update
 from src.red_nosed_reports import count_safe_reports
 
 
@@ -144,9 +144,9 @@ def perform_day_4() -> dict[str, int]:
 
 
 def perform_day_5() -> dict[str, int]:
-    def read_rules_from_file(file_name) -> list[tuple[int, int]]:
+    def read_rules_from_file(file_name) -> list[Rule]:
         """
-        Reads rules (tuples) of two ints from a given file, one per line, separated by |.
+        Reads rules from a given file, one per line, separated by |.
         """
         # 1. Get the absolute path of the current file (src/main.py)
         from pathlib import Path
@@ -159,21 +159,20 @@ def perform_day_5() -> dict[str, int]:
         # 3. Construct the path to the resource file
         resource_file_path = project_root / "tests" / "resources" / file_name
 
-        tuples = []
+        rules = []
         try:
             with open(resource_file_path, 'r') as file:
                 for line in file:
                     s = line.strip().split('|')
-                    t = (int(s[0]), int(s[1]))
-                    tuples.append(t)
+                    rules.append(Rule(int(s[0]), int(s[1])))
         except FileNotFoundError:
             print(f"Error: The file '{resource_file_path}' was not found.")
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
 
-        return tuples
+        return rules
 
-    def read_updates_from_file(file_name) -> list[list[int]]:
+    def read_updates_from_file(file_name) -> list[Update]:
         """
         Reads updates (lists of ints) from a given file, one per line.
         """
@@ -188,12 +187,12 @@ def perform_day_5() -> dict[str, int]:
         # 3. Construct the path to the resource file
         resource_file_path = project_root / "tests" / "resources" / file_name
 
-        updates = []
+        updates: list[Update] = []
         try:
             with open(resource_file_path, 'r') as file:
                 for line in file:
                     try:
-                        updates.append(list(map(int, line.strip().split(','))))
+                        updates.append(Update(list(map(int, line.strip().split(',')))))
                     except ValueError:
                         print(f"Warning: Skipping unparseable line: '{line.strip()}' in {resource_file_path}")
         except FileNotFoundError:
@@ -206,7 +205,7 @@ def perform_day_5() -> dict[str, int]:
     rules = read_rules_from_file("day5_rules.txt")
     updates = read_updates_from_file("day5_updates.txt")
 
-    sum_of_middles, sum_of_middles_after_fix = sum_middle_pages(rules, updates)
+    sum_of_middles, sum_of_middles_after_fix = report_totals(rules, updates)
 
     return {"sum of middle pages": sum_of_middles, "sum of middle pages (fixed updates)": sum_of_middles_after_fix}
 

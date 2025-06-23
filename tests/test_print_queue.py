@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from src.print_queue import sum_middle_pages, Rule, Update
+from src.print_queue import report_totals, Rule, Update
 
 
 class Test(TestCase):
@@ -37,6 +37,6 @@ class Test(TestCase):
             Update([97, 13, 75, 29, 47]),
         ]
 
-        good, fixed = sum_middle_pages(rules, updates)
+        good, fixed = report_totals(rules, updates)
         self.assertEqual(143, good, "The sum of middle pages (valid updates only) should be 143")
         self.assertEqual(123, fixed, "The sum of middle pages (fixed updates only) should be 123")
