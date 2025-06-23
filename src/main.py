@@ -2,6 +2,7 @@ import pprint
 from pathlib import Path
 
 from src.ceres_search import ceres_search, ceres_x_search
+from src.guard_gallivant import count_visited_positions
 from src.historian_hysteria import distance, similarity
 from src.multiplications import memory_multiply, selective_memory_multiply
 from src.print_queue import report_totals, Rule, Update
@@ -112,6 +113,12 @@ def print_queue_challenge() -> dict[str, int]:
     return {"sum of middle pages": sum_of_middles, "sum of middle pages (fixed updates)": sum_of_middles_after_fix}
 
 
+def guard_gallivant_challenge() -> dict[str, int]:
+    map = read_lines_from_file("day6_map.txt", lambda line: line.strip())
+    visited_positions = count_visited_positions(map)
+    return {"visited positions": visited_positions, "_": 0}
+
+
 if __name__ == '__main__':
     challenges = [
         ("Day 1: Historian Hysteria", historian_hysteria_challenge()),
@@ -119,6 +126,7 @@ if __name__ == '__main__':
         ("Day 3: Mull It Over", mull_it_over_challenge()),
         ("Day 4: Ceres Search", ceres_search_challenge()),
         ("Day 5: Print Queue", print_queue_challenge()),
+        ("Day 6: Guard Gallivant", guard_gallivant_challenge()),
     ]
     for challenge in challenges:
         print(f'{challenge[0]}: {pprint.pformat(challenge[1])}')
