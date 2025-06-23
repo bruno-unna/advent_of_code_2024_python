@@ -1,3 +1,4 @@
+from functools import cmp_to_key
 from operator import contains
 
 
@@ -92,21 +93,20 @@ def triage_updates(rules: list[Rule], updates: list[Update]) -> tuple[list[Updat
 
 
 def fix(rules: list[Rule], bad_updates: list[Update]) -> list[Update]:
-    def sort_rules(rules: list[Rule]) -> list[Rule]:
-        if len(rules) == 0:
-            return []
-        first_generator = (r for r in rules if all(not k.right() == r.left() for k in rules))
-        first = next(first_generator, None)
-        index = rules.index(first)
-        new_rules = rules[:index] + rules[index + 1:]
-        return [first] + sort_rules(new_rules)
-
     def fix_update(bad_update: Update) -> Update:
-        candidate_rules: list[Rule] = list(
-            filter(lambda r: r.left() in bad_update and r.right() in bad_update, rules))
+        rules_tuples: list[tuple[int, int]] = list(map(lambda r: r.tuple, rules))
 
-        ordered_rules = sort_rules(candidate_rules)
-        return Update(list(map(lambda t: t.left(), ordered_rules)))
+        def rule_based_comparator(a, b):
+            if (a, b) in rules_tuples:
+                return -1
+            else:
+                return 1
+
+        comparing_key = cmp_to_key(rule_based_comparator)
+
+        fixed_pages = sorted(bad_update.pages, key=comparing_key)
+
+        return Update(fixed_pages)
 
     fixed_updates = []
     for bu in bad_updates:
