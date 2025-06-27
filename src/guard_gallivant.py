@@ -1,3 +1,4 @@
+import pprint
 from enum import Enum, auto
 
 initial_position: tuple[int, int]
@@ -39,11 +40,13 @@ class LabMap:
     direction: Direction
     current_position: tuple[int, int]
     next_pos: tuple[int, int]
+    steps: dict[tuple[int, int], set[Direction]]
 
     def __init__(self, layout):
         self.lab_map: list[str] = layout.copy()
         self.size = (len(self.lab_map[0]), len(self.lab_map))
         self.direction = Direction.UP
+        self.steps = {}
 
     def find_initial_position(self):
         ini_pos = (0, 0)
@@ -57,10 +60,9 @@ class LabMap:
     def step(self) -> StepResult:
 
         # mark the current position as visited
-        i, j = self.current_position
-        row = self.lab_map[j]
-        new_row = row[:i] + self.direction.value + row[i + 1:]
-        self.lab_map[j] = new_row
+        if self.current_position not in self.steps.keys():
+            self.steps[self.current_position] = set()
+        self.steps[self.current_position].add(self.direction)
 
         # calculate what the next position would be
         match self.direction:
@@ -86,8 +88,8 @@ class LabMap:
             return StepResult.BLOCK_ENCOUNTERED
 
         # if we've been here before, in the same situation, it's a loop
-        ni, nj = self.next_pos
-        if self.lab_map[nj][ni] == self.direction.value:
+        if (self.next_pos in self.steps and
+                self.direction in self.steps[self.next_pos]):
             return StepResult.LOOP_DETECTED
 
         # update the current position and exit
@@ -100,14 +102,6 @@ class LabMap:
         while result in [StepResult.STEP_TAKEN, StepResult.BLOCK_ENCOUNTERED]:
             result = self.step()
         return result
-
-    def how_many_x(self) -> int:
-        counter = 0
-        for i in range(0, self.size[0]):
-            for j in range(0, self.size[1]):
-                if self.lab_map[j][i] in [dir.value for dir in Direction]:
-                    counter += 1
-        return counter
 
     def with_obstacle_at(self, obstacle_location: tuple[int, int]):
         obst_x, obst_y = obstacle_location
@@ -123,7 +117,7 @@ def count_visited_positions(received_map: list[str]) -> int:
     global initial_position
     initial_position = m.find_initial_position()
     m.walk()
-    return m.how_many_x()
+    return len(m.steps)
 
 
 def count_potential_loops(received_map: list[str]) -> int:
@@ -138,19 +132,9 @@ def count_potential_loops(received_map: list[str]) -> int:
     initial_position = m.find_initial_position()
     m.walk()
 
-    # find potential obstacle placements
-    points: list[tuple[int, int]] = []
-    for i in range(0, m.size[0]):
-        for j in range(0, m.size[1]):
-            if m.lab_map[j][i] in [d.value for d in Direction]:
-                p = (i, j)
-                points.append(p)
-
-    m = LabMap(received_map)
-
     # count how many of the obstacle placements provoke loops
     loops = 0
-    for p in points:
+    for p in m.steps.keys():
         possibly_looped_map = m.with_obstacle_at(p)
         r = possibly_looped_map.walk()
         if r == StepResult.LOOP_DETECTED:
