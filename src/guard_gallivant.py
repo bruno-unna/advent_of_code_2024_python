@@ -1,7 +1,4 @@
-import pprint
 from enum import Enum, auto
-
-initial_position: tuple[int, int]
 
 
 class Direction(Enum):
@@ -38,6 +35,7 @@ class LabMap:
     lab_map: list[str]
     size: tuple[int, int]
     direction: Direction
+    initial_position: tuple[int, int]
     current_position: tuple[int, int]
     next_pos: tuple[int, int]
     steps: dict[tuple[int, int], set[Direction]]
@@ -97,7 +95,8 @@ class LabMap:
         return StepResult.STEP_TAKEN
 
     def walk(self) -> StepResult:
-        self.current_position = initial_position
+        self.find_initial_position()
+        self.current_position = self.find_initial_position()
         result = self.step()
         while result in [StepResult.STEP_TAKEN, StepResult.BLOCK_ENCOUNTERED]:
             result = self.step()
@@ -113,9 +112,13 @@ class LabMap:
 
 
 def count_visited_positions(received_map: list[str]) -> int:
+    """
+    Given a lab map, calculate in advance the trajectory of a patrol, and count the steps.
+
+    :param received_map: Map of the lab.
+    :return: Number of steps that the patrol takes before leaving.
+    """
     m = LabMap(received_map)
-    global initial_position
-    initial_position = m.find_initial_position()
     m.walk()
     return len(m.steps)
 
@@ -128,15 +131,12 @@ def count_potential_loops(received_map: list[str]) -> int:
     :return: The number of places at which adding an obstacle a patrol loop occurs.
     """
     m = LabMap(received_map)
-    global initial_position
-    initial_position = m.find_initial_position()
     m.walk()
 
     # count how many of the obstacle placements provoke loops
     loops = 0
     for p in m.steps.keys():
         possibly_looped_map = m.with_obstacle_at(p)
-        r = possibly_looped_map.walk()
-        if r == StepResult.LOOP_DETECTED:
+        if possibly_looped_map.walk() == StepResult.LOOP_DETECTED:
             loops += 1
     return loops
